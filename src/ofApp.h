@@ -4,8 +4,8 @@
 #include "ofxOsc.h"
 #include "ofxKinectCommonBridge.h"
 
-#define HOST "192.168.29.202"
-//#define HOST "localhost"
+//#define HOST "192.168.29.203"
+#define HOST "localhost"
 //#define HOST "192.168.29.147"
 #define PORT 12345
 

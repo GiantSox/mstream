@@ -33,6 +33,7 @@ void ofApp::update(){
 	kinect.update();
 
 	ofPoint head;
+	ofPoint rightHand;
 	if (kinect.isNewSkeleton()) {
 		auto skeletons = kinect.getSkeletons();
 		for (int i = 0; i < skeletons.size(); i++)
@@ -47,6 +48,8 @@ void ofApp::update(){
 				m.addFloatArg(head.y);
 				m.addFloatArg(head.z);
 				sender.sendMessage(m, false);*/
+
+				rightHand = skeletons[i].find(NUI_SKELETON_POSITION_HAND_RIGHT)->second.getStartPosition();
 
 
 				headsp = skeletons[i].find(NUI_SKELETON_POSITION_HEAD)->second.getScreenPosition();
@@ -96,6 +99,13 @@ void ofApp::update(){
 	maws.addFloatArg(head.y);
 	maws.addFloatArg(head.z);
 	sender.sendMessage(maws, false);
+
+	/*ofxOscMessage rightmaws;
+	rightmaws.setAddress("/rightHand/");
+	rightmaws.addFloatArg(rightHand.x);
+	rightmaws.addFloatArg(rightHand.y);
+	rightmaws.addFloatArg(rightHand.z);
+	sender.sendMessage(rightmaws, false);*/
 
 	/*ofxOscMessage headScreenPos;
 	headScreenPos.setAddress("/head/screenPosition/");

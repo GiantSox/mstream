@@ -98,7 +98,7 @@ void ofApp::update(){
 	maws.addFloatArg(head.x);
 	maws.addFloatArg(head.y);
 	maws.addFloatArg(head.z);
-	sender.sendMessage(maws, false);
+	//sender.sendMessage(maws, false);
 
 	/*ofxOscMessage rightmaws;
 	rightmaws.setAddress("/rightHand/");
@@ -112,6 +112,14 @@ void ofApp::update(){
 	headScreenPos.addFloatArg(headsp.x);
 	headScreenPos.addFloatArg(headsp.y);
 	sender.sendMessage(headScreenPos, false);*/
+
+	ofxOscBundle bundle;
+	bundle.addMessage(maws);
+	sender.sendBundle(bundle);
+
+	ofxOscMessage badmsg;
+	badmsg.setAddress("/badmsg");
+	sender.sendMessage(badmsg, false);
 
 	frame++;
 }

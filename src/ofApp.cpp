@@ -3,10 +3,16 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 	ofSetFrameRate(60);
+	gui = new ofxDatGui(ofxDatGuiAnchor::TOP_RIGHT);
+	addressInput = gui->addTextInput("IP");
+	portInput = gui->addTextInput("Port (currently nonfunctional)");
+	portInput->setInputType(ofxDatGuiInputType::NUMERIC);
+	confirmReceiver = gui->addButton("Confirm Address/Port");
 
-	//receive.setup(PORT);
+	gui->onTextInputEvent(this, &ofApp::textInputHandler);
+	gui->onButtonEvent(this, &ofApp::buttonHandler);
 
-	//sender.setup("192.168.29.147", 12345);
+
 	sender.setup(HOST, PORT);
 	kinect.initSensor();
 	kinect.initColorStream(640, 480);
@@ -16,6 +22,25 @@ void ofApp::setup(){
 	ofDisableAlphaBlending();
 
 }
+
+void ofApp::textInputHandler(ofxDatGuiTextInputEvent e)
+{
+	if (e.target == addressInput)
+	{
+		HOST = e.text;
+	}
+}
+
+void ofApp::buttonHandler(ofxDatGuiButtonEvent e)
+{
+	if (e.target == confirmReceiver)
+	{
+		cout << "sending to " << HOST << ":" << PORT << endl;
+		sender.setup(HOST, PORT);
+	}
+}
+
+
 
 //--------------------------------------------------------------
 void ofApp::update(){
@@ -113,13 +138,14 @@ void ofApp::update(){
 	headScreenPos.addFloatArg(headsp.y);
 	sender.sendMessage(headScreenPos, false);*/
 
-	ofxOscBundle bundle;
+	/*ofxOscBundle bundle;
 	bundle.addMessage(maws);
-	sender.sendBundle(bundle);
+	sender.sendBundle(bundle);*/
+	sender.sendMessage(maws, false);
 
-	ofxOscMessage badmsg;
+	/*ofxOscMessage badmsg;
 	badmsg.setAddress("/badmsg");
-	sender.sendMessage(badmsg, false);
+	sender.sendMessage(badmsg, false);*/
 
 	frame++;
 }

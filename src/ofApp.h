@@ -3,16 +3,20 @@
 #include "ofMain.h"
 #include "ofxOsc.h"
 #include "ofxKinectCommonBridge.h"
+#include "ofxDatGui.h"
 
 //#define HOST "192.168.29.203"
-#define HOST "localhost"
+//#define HOST "localhost"
 //#define HOST "192.168.29.147"
-#define PORT 31337
+#define PORT 12345
 
 
 class ofApp : public ofBaseApp{
 
 	public:
+		string HOST = "localhost";
+
+
 		void setup();
 		void update();
 		void draw();
@@ -28,6 +32,13 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+		void textInputHandler(ofxDatGuiTextInputEvent e);
+		void buttonHandler(ofxDatGuiButtonEvent e);
+
+		ofxDatGui* gui;
+		ofxDatGuiTextInput* addressInput;
+		ofxDatGuiTextInput* portInput;
+		ofxDatGuiButton* confirmReceiver;
 
 		ofxOscReceiver receive;
 

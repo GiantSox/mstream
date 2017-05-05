@@ -58,6 +58,7 @@ void ofApp::update(){
 	kinect.update();
 
 	ofPoint head;
+	ofPoint leftHand;
 	ofPoint rightHand;
 	if (kinect.isNewSkeleton()) {
 		auto skeletons = kinect.getSkeletons();
@@ -74,19 +75,12 @@ void ofApp::update(){
 				m.addFloatArg(head.z);
 				sender.sendMessage(m, false);*/
 
+				leftHand = skeletons[i].find(NUI_SKELETON_POSITION_HAND_LEFT)->second.getStartPosition();
 				rightHand = skeletons[i].find(NUI_SKELETON_POSITION_HAND_RIGHT)->second.getStartPosition();
-
 
 				headsp = skeletons[i].find(NUI_SKELETON_POSITION_HEAD)->second.getScreenPosition();
 				lhsp = skeletons[i].find(NUI_SKELETON_POSITION_HAND_LEFT)->second.getScreenPosition();
 				rhsp = skeletons[i].find(NUI_SKELETON_POSITION_HAND_RIGHT)->second.getScreenPosition();
-				/*ofxOscMessage msp;	//do not do this - OSC spam causing perf tank?
-				msp.setAddress("/head/screenPosition/");
-				cout << headsp.x << ", " << headsp.y << endl;
-				msp.addFloatArg(headsp.x);
-				msp.addFloatArg(headsp.y);
-				sender.sendMessage(msp, false);*/
-				
 			}
 		}
 	}
@@ -118,36 +112,30 @@ void ofApp::update(){
 	sender.sendMessage(giveMerightHand, false);*/
 
 
-	ofxOscMessage maws;
-	maws.setAddress("/head/");
-	maws.addFloatArg(head.x);
-	maws.addFloatArg(head.y);
-	maws.addFloatArg(head.z);
-	//sender.sendMessage(maws, false);
+	ofxOscMessage headMsg;
+	headMsg.setAddress("/head/");
+	headMsg.addFloatArg(head.x);
+	headMsg.addFloatArg(head.y);
+	headMsg.addFloatArg(head.z);
 
-	/*ofxOscMessage rightmaws;
-	rightmaws.setAddress("/rightHand/");
-	rightmaws.addFloatArg(rightHand.x);
-	rightmaws.addFloatArg(rightHand.y);
-	rightmaws.addFloatArg(rightHand.z);
-	sender.sendMessage(rightmaws, false);*/
+	ofxOscMessage leftHandMsg;
+	leftHandMsg.setAddress("/leftHand/");
+	leftHandMsg.addFloatArg(leftHand.x);
+	leftHandMsg.addFloatArg(leftHand.y);
+	leftHandMsg.addFloatArg(leftHand.z);
 
-	/*ofxOscMessage headScreenPos;
-	headScreenPos.setAddress("/head/screenPosition/");
-	headScreenPos.addFloatArg(headsp.x);
-	headScreenPos.addFloatArg(headsp.y);
-	sender.sendMessage(headScreenPos, false);*/
+	ofxOscMessage rightHandMsg;
+	rightHandMsg.setAddress("/rightHand/");
+	rightHandMsg.addFloatArg(rightHand.x);
+	rightHandMsg.addFloatArg(rightHand.y);
+	rightHandMsg.addFloatArg(rightHand.z);
 
-	/*ofxOscBundle bundle;
-	bundle.addMessage(maws);
-	sender.sendBundle(bundle);*/
-	sender.sendMessage(maws, false);
+	ofxOscBundle triBundle;
+	triBundle.addMessage(headMsg);
+	triBundle.addMessage(leftHandMsg);
+	triBundle.addMessage(rightHandMsg);
+	sender.sendBundle(triBundle);
 
-	/*ofxOscMessage badmsg;
-	badmsg.setAddress("/badmsg");
-	sender.sendMessage(badmsg, false);*/
-
-	frame++;
 }
 
 //--------------------------------------------------------------
@@ -155,6 +143,8 @@ void ofApp::draw(){
 
 	kinect.draw(0,0);
 	ofDrawCircle(headsp, 15);
+	ofDrawCircle(lhsp, 15);
+	ofDrawCircle(rhsp, 15);
 	//ofDrawCircle(mouseX, mouseY, 15);
 
 	ofPushStyle();
